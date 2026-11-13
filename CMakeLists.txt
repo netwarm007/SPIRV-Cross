@@ -445,7 +445,8 @@ if (SPIRV_CROSS_CLI)
 		#  - Update the reference files
 		#  - Get cycle counts from malisc
 		#  - Keep failing outputs
-		find_package(PythonInterp)
+		find_package(Python3 COMPONENTS Interpreter)
+		set(PYTHON_EXECUTABLE "${Python3_EXECUTABLE}")
 		find_program(spirv-cross-glslang NAMES glslangValidator
 				PATHS ${CMAKE_CURRENT_SOURCE_DIR}/external/glslang-build/output/bin
 				NO_DEFAULT_PATH)
@@ -477,8 +478,8 @@ if (SPIRV_CROSS_CLI)
 				--spirv-opt "${spirv-cross-spirv-opt}"
 				--spirv-val "${spirv-cross-spirv-val}")
 
-		if (${PYTHONINTERP_FOUND} AND SPIRV_CROSS_ENABLE_TESTS)
-			if (${PYTHON_VERSION_MAJOR} GREATER 2)
+		if (Python3_Interpreter_FOUND AND SPIRV_CROSS_ENABLE_TESTS)
+			if (Python3_VERSION_MAJOR GREATER 2)
 				add_executable(spirv-cross-c-api-test tests-other/c_api_test.c)
 				target_link_libraries(spirv-cross-c-api-test spirv-cross-c)
 				set_target_properties(spirv-cross-c-api-test PROPERTIES LINK_FLAGS "${spirv-cross-link-flags}")
@@ -595,9 +596,9 @@ if (SPIRV_CROSS_CLI)
 						${CMAKE_CURRENT_SOURCE_DIR}/shaders-ue4-no-opt
 						WORKING_DIRECTORY $<TARGET_FILE_DIR:spirv-cross>)
 			endif()
-		elseif(NOT ${PYTHONINTERP_FOUND})
+		elseif(NOT Python3_Interpreter_FOUND)
 			message(WARNING "SPIRV-Cross: Testing disabled. Could not find python3. If you have python3 installed try running "
-					"cmake with -DPYTHON_EXECUTABLE:FILEPATH=/path/to/python3 to help it find the executable")
+					"cmake with -DPython3_EXECUTABLE:FILEPATH=/path/to/python3 to help it find the executable")
 		endif()
 	endif()
 endif()
